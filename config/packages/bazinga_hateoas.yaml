@@ -1,0 +1,11 @@
+# For full configuration see https://github.com/willdurand/BazingaHateoasBundle/blob/master/Resources/doc/index.md#reference-configuration
+bazinga_hateoas:
+    metadata:
+        cache:      file
+        file_cache:
+            dir:    '%kernel.cache_dir%/hateoas'
+    serializer:
+        json: hateoas.serializer.json_hal
+        xml: hateoas.serializer.xml
+    twig_extension:
+        enabled: false

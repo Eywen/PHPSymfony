@@ -1,0 +1,27 @@
+lexik_jwt_authentication:
+    secret_key: '%env(resolve:JWT_SECRET_KEY)%' # required for token creation
+    public_key: '%env(resolve:JWT_PUBLIC_KEY)%' # required for token verification
+    pass_phrase: '%env(JWT_PASSPHRASE)%'        # required for token creation, usage of an environment variable is recommended
+    # token_ttl: 7200 # token TTL in seconds, defaults to 2 hours
+    clock_skew: 0
+
+    # token encoding/decoding settings
+    encoder:
+        # token encoder/decoder service - default implementation based on the lcobucci/jwt library
+        service: lexik_jwt_authentication.encoder.lcobucci
+
+        # encryption algorithm used by the encoder service
+        signature_algorithm: RS256
+
+    # token extraction settings
+    token_extractors:
+        # look for a token as Authorization Header
+        authorization_header:
+            enabled: true
+            prefix:  Bearer
+            name:    Authorization
+
+        # check token in a cookie
+        cookie:
+            enabled: false
+            name:    BEARER

@@ -1,0 +1,44 @@
+jms_serializer:
+    visitors:
+        json_serialization:
+            options: 0 # json_encode options bitmask, suggested JSON_PRETTY_PRINT in development
+            depth: 512
+        json_deserialization:
+            options: 0 # json_decode options bitmask
+        xml_serialization:
+            format_output: '%kernel.debug%'
+            version: "1.0"
+            encoding: "UTF-8"
+            # default_root_name: "result"
+            default_root_ns: null
+        xml_deserialization:
+            options: 0 # simplexml_load_string options bitmask
+            external_entities: false
+            # doctype_whitelist:
+            #     - '<!DOCTYPE authorized SYSTEM "http://www.w3.org/2005/Atom">' # an authorized document type for xml deserialization
+    metadata:
+        cache: file
+        debug: "%kernel.debug%"
+        file_cache:
+            dir: "%kernel.cache_dir%/serializer"
+
+        # Using auto-detection, the mapping files for each bundle will be
+        # expected in the Resources/config/serializer directory.
+        #
+        # Example:
+        # class: My\FooBundle\Entity\User
+        # expected path: @MyFooBundle/Resources/config/serializer/Entity.User.(yml|xml|php)
+        auto_detection: false
+
+        # if you don't want to use auto-detection, you can also define the
+        # namespace prefix and the corresponding directory explicitly
+        directories:
+            App:
+                namespace_prefix: "App\\Entity"
+                path: "%kernel.project_dir%/src/Entity"
+
+        warmup:
+            # list of directories to scan searching for php classes to use when warming up the cache
+            paths:
+                included: [ "%kernel.project_dir%/src/Entity" ]
+                excluded: []

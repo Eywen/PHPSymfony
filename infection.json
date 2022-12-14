@@ -1,0 +1,25 @@
+{
+    "source": {
+        "directories": [
+            "src"
+        ],
+        "excludes": [
+            ""
+        ]
+    },
+    "timeout": 15,
+    "logs": {
+        "text": "var/infection/report/infection-log.txt",
+        "html": "var/infection/report/infection.html",
+        "perMutator": "var/infection/report/per-mutator.md",
+        "summary": "var/infection/report/infection-summary.txt"
+    },
+    "tmpDir": "var/infection/tmp",
+    "mutators": {
+        "@default": true,
+        "@equal": true,
+        "@identical": true
+    },
+    "testFramework": "phpunit",
+    "initialTestsPhpOptions": "-dxdebug.mode=coverage"
+}

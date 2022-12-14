@@ -1,0 +1,437 @@
+openapi: 3.0.2
+info:
+  title: '🏛️ MiW REST api'
+  description: '[UPM] MiW REST api'
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+  version: 2.1.2
+  contact:
+    name: Máster Universitario en Ingeniería Web
+    url: https://miw.etsisi.upm.es/
+    email: miw.etsisi@upm.es
+servers:
+  - url: '{schema}://{servername}:{port}/api/v1'
+    description: 'MiW Production server (uses live data)'
+    variables:
+      schema:
+        enum:
+          - http
+          - https
+        default: https
+      servername:
+        default: 127.0.0.1
+      port:
+        default: '8000'
+tags:
+  - name: '🔐 Login'
+    description: 'User login'
+  - name: '👥 Users'
+    description: 'User management'
+paths:
+  /login_check:
+    post:
+      tags:
+        - '🔐 Login'
+      summary: Returns MiW api token
+      description: 'Returns MiW api authorization token (JWT).'
+      operationId: miw_post_login
+      requestBody:
+        $ref: '#/components/requestBodies/LoginRequestBody'
+      responses:
+        '200':
+          description: '_User access token_'
+          headers:
+            Authorization:
+              description: 'Authorization header with access token'
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token_type: { description: 'Bearer', type: string }
+                  access_token: { description: 'JSON web token', type: string }
+                  expires_in: { description: 'Expiration time (in seconds)', type: integer }
+              examples:
+                example-1:
+                  value:
+                    token_type: Bearer
+                    access_token: <JSON web token>
+                    expires_in: 7200
+          links:
+            AllEndPoints:
+              operationId: '*'
+              parameters:
+                token: '$response.body#/access_token'
+              description: 'The `access_token` value returned in the response must be appended to the `Authorization: Bearer ` header in all operations.'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+
+  /users:
+    get:
+      tags: [ '👥 Users' ]
+      summary: Retrieves the collection of User resources.
+      description: 'Returns all users from the system that the user has access to.'
+      operationId: api_users_cget
+      security:
+        - MiWApiSecurity: []
+      responses:
+        '200':
+          description: 'Array of users'
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  users: { description: 'Users array', type: array, items: { $ref: '#/components/schemas/User' } }
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+    post:
+      tags: [ '👥 Users' ]
+      summary: Creates a User resource.
+      description: 'Creates a new user'
+      operationId: api_users_post
+      security:
+        - MiWApiSecurity: []
+      requestBody:
+        $ref: '#/components/requestBodies/UserRequestBody'
+      responses:
+        '201':
+          description: '`Created`: user created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+        '400':
+          $ref: '#/components/responses/400_BadRequest_Response'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '422':
+          $ref: '#/components/responses/422_UnprocessableEntity_Response'
+    options:
+      tags: [ '👥 Users' ]
+      summary: Provides the list of HTTP supported methods.
+      description: 'Return a `Allow` header with a comma separated list of HTTP supported methods.'
+      operationId: api_users_coptions
+      responses:
+        '204':
+          description: '`Allow` header &lt;Response body is empty&gt;'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
+  '/users/{userId}':
+    parameters:
+      - $ref: '#/components/parameters/userId'
+    get:
+      tags: [ '👥 Users' ]
+      summary: Retrieves a User resource based on a single ID.
+      description: 'Returns the user identified by `userId`.'
+      operationId: api_users_get
+      security:
+        - MiWApiSecurity: [ ]
+      responses:
+        '200':
+          description: User
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+    put:
+      tags: [ '👥 Users' ]
+      summary: Updates the User resource.
+      description: 'Updates the user identified by `userId`.'
+      operationId: api_users_put
+      parameters:
+        - $ref: '#/components/parameters/ifMatchParam'
+      security:
+        - MiWApiSecurity: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/UserRequestBody'
+      responses:
+        '209':
+          description: '`Content Returned`: user previously existed and is now updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          $ref: '#/components/responses/400_BadRequest_Response'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+        '412':
+          $ref: '#/components/responses/412_Precondition_Failed_Response'
+    delete:
+      tags: [ '👥 Users' ]
+      summary: Removes the User resource.
+      description: 'Deletes the user identified by `userId`.'
+      operationId: api_users_delete
+      security:
+        - MiWApiSecurity: [ ]
+      responses:
+        '204':
+          description: 'User deleted &lt;Response body is empty&gt;'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+    options:
+      tags: [ '👥 Users' ]
+      summary: Provides the list of HTTP supported methods.
+      description: 'Return a `Allow` header with a comma separated list of HTTP supported methods.'
+      operationId: api_users_options_id
+      responses:
+        '204':
+          description: '`Allow` header &lt;Response body is empty&gt;'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
+
+components:
+  headers:
+    ETag:
+      description: Entity Tag (unique identifier provided for cache validation)
+      schema: { type: string, pattern: "[0-9a-f]*" }
+    Location:
+      description: "`URI` of the new resource"
+      schema: { type: string, format: url }
+    Allow:
+      description: List of HTTP supported methods
+      schema: { type: string }
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          description: 'User Id'
+          type: integer
+          format: int64
+        email:
+          description: 'User email'
+          type: string
+          format: email
+        roles:
+          description: 'User roles'
+          type: string
+          format: json
+        _links:
+          description: link relations
+          type: object
+          properties:
+            parent:
+              type: object
+              properties: {"href": { "type": "string", "format": "url" }}
+            self:
+              type: object
+              properties: {"href": { "type": "string", "format": "url" }}
+      example:
+        user:
+          id: 1508
+          email: 'miw.etsisi@upm.es'
+          roles: [ 'ROLE_USER' ]
+          _links:
+            parent:
+              href: /api/v1/users
+            self:
+              href: /api/v1/users/1508
+    Message:
+      type: object
+      description: HTTP response message
+      properties:
+        code:
+          description: 'Response code'
+          type: integer
+          format: int64
+        message:
+          description: 'Response message'
+          type: string
+      example:
+        code: 200
+        message: Ok
+
+  responses:
+    400_BadRequest_Response:
+      description: "`BAD REQUEST`: e-mail already exists"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+          examples:
+            response-400:
+              $ref: '#/components/examples/response-400'
+    401_Unauthorized_Response:
+      description: '`Unauthorized`: invalid Authorization header'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+          examples:
+            response-401:
+              $ref: '#/components/examples/response-401'
+    403_Forbidden_Response:
+      description: '`Forbidden`: you don''t have permission to access'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+          examples:
+            response-403:
+              $ref: '#/components/examples/response-403'
+    404_Resource_Not_Found_Response:
+      description: '`Not found`: resource not found'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+          examples:
+            response-404:
+              $ref: '#/components/examples/response-404'
+    412_Precondition_Failed_Response:
+      description: '`PRECONDITION FAILED`: one or more conditions given evaluated to false'
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+          examples:
+            response-412:
+              $ref: '#/components/examples/response-412'
+    422_UnprocessableEntity_Response:
+      description: "`UNPROCESSABLE ENTITY`: e-mail or password is left out"
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Message'
+          examples:
+            response-422:
+              $ref: '#/components/examples/response-422'
+
+  requestBodies:
+    UserRequestBody:
+      description: '`User` data'
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: 'User email'
+                type: string
+                format: email
+              password:
+                description: 'User password'
+                type: string
+                format: password
+              roles:
+                description: 'User roles'
+                type: string
+                format: json
+            example:
+              email: User_email@example.com
+              password: User_password
+              roles: [ 'ROLE_USER', 'ROLE_ADMIN' ]
+    LoginRequestBody:
+      description: Registered user **e-mail** and **password**
+      required: true
+      content:
+        application/x-www-form-urlencoded:
+          schema:
+            type: object
+            properties:
+              email:
+                description: 'User email'
+                type: string
+                format: email
+              password:
+                description: 'User password'
+                type: string
+                format: password
+        application/json:
+          schema:
+            type: object
+            properties:
+              email:
+                description: 'User email'
+                type: string
+                format: email
+              password:
+                description: 'User password'
+                type: string
+                format: password
+
+  parameters:
+    userId:
+      name: userId
+      in: path
+      description: 'ID of user'
+      required: true
+      schema: { "type": "integer", pattern: '^\d+$' }
+    ifMatchParam:
+      name: If-Match
+      in: header
+      description: "ETag value of the resource you are trying to update"
+      required: true
+      schema:
+        type: string
+        pattern: "[0-9a-f]*"
+
+  examples:
+    response-400:
+      value:
+        code: 400
+        message: 'BAD REQUEST: e-mail already exists'
+    response-401:
+      value:
+        code: 401
+        message: 'UNAUTHORIZED: invalid Authorization header'
+    response-403:
+      value:
+        code: 403
+        message: "FORBIDDEN You don't have permission to access"
+    response-404:
+      value:
+        code: 404
+        message: 'NOT FOUND: Resource not found'
+    response-412:
+      value:
+        code: 412
+        message: 'PRECONDITION FAILED: one or more conditions given evaluated to false'
+    response-422:
+      value:
+        code: 422
+        message: 'UNPROCESSABLE ENTITY: e-mail or password is left out'
+
+  securitySchemes:
+    MiWApiSecurity:
+      type: http
+      bearerFormat: JWT
+      scheme: bearer
