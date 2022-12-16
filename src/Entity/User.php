@@ -33,6 +33,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class User implements UserInterface, PasswordAuthenticatedUserInterface, JsonSerializable, JWTUserInterface
 {
     public final const USER_ATTR = 'user';
+    public final const USER_ID_ATTR = 'id';
     public final const EMAIL_ATTR = 'email';
     public final const PASSWD_ATTR = 'password';
     public final const ROLES_ATTR = 'roles';

@@ -39,6 +39,7 @@ class Result implements JsonSerializable
 {
     public const RESULT_ATTR = 'result';
     public const USER_ID_ATTR = 'userId';
+    public const RESULT_ID_ATTR = 'resultId';
     public const TIME_ATTR = 'time';
 
     /**
