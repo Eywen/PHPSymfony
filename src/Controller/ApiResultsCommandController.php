@@ -83,10 +83,77 @@ class ApiResultsCommandController extends AbstractController implements ApiResul
         return Utils::apiResponse(Response::HTTP_NO_CONTENT);
     }
 
-
+    /**
+     * @see ApiResultsCommandInterface
+     *
+     * @Route(
+     *     path=".{_format}",
+     *     defaults={ "_format": null },
+     *     requirements={
+     *         "_format": "json|xml"
+     *     },
+     *     methods={ Request::METHOD_POST },
+     *     name="post"
+     * )
+     *
+     * @Security(
+     *     expression="is_granted('IS_AUTHENTICATED_FULLY')",
+     *     statusCode=401,
+     *     message="`Unauthorized`: Invalid credentials."
+     * )
+     * @throws JsonException
+     */
     public function postAction(Request $request): Response
     {
-        // TODO: Implement postAction() method.
+        $format = Utils::getFormat($request);
+        // Puede crear un resultado sólo si tiene ROLE_ADMIN
+        if (!$this->isGranted(self::ROLE_ADMIN)) {
+            return Utils::errorMessage( // 403
+                Response::HTTP_FORBIDDEN,
+                '`Forbidden`: you don\'t have permission to access',
+                $format
+            );
+        }
+        $body = $request->getContent();
+        $postData = json_decode((string) $body, true, 512, JSON_THROW_ON_ERROR);
+
+        if (!isset($postData[Result::RESULT_ATTR], $postData[Result::USER_ID_ATTR])) {
+            // 422 - Unprocessable Entity -> Faltan datos
+            return Utils::errorMessage(Response::HTTP_UNPROCESSABLE_ENTITY, null, $format);
+        }
+
+        // hay datos -> procesarlos
+        $user_exist = $this->entityManager
+            ->getRepository(User::class)
+            ->findOneBy([ User::USER_ID_ATTR => $postData[Result::USER_ID_ATTR] ]);
+
+        $result_exist = $this->entityManager
+                ->getRepository(Result::class)
+                ->findOneBy([ Result::RESULT_USER_ATTR => $user_exist ]);
+        $messageResultExist = "Ya existe el resultado para el usuario que intenta agregar.";
+        if ($result_exist instanceof Result) {    // 400 - Bad Request
+            return Utils::errorMessage(Response::HTTP_BAD_REQUEST, $messageResultExist, $format);
+        }
+
+        // 201 - Created
+        $result = new Result(
+            strval($postData[Result::RESULT_ID_ATTR]),
+            strval($postData[Result::RESULT_USER_ATTR]),
+            new DateTime('now')
+        );
+
+        $this->entityManager->persist($result);
+        $this->entityManager->flush();
+
+        return Utils::apiResponse(
+            Response::HTTP_CREATED,
+            [ Result::RESULT_ATTR => $result ],
+            $format,
+            [
+                'Location' => $request->getScheme() . '://' . $request->getHttpHost() .
+                    ApiResultsQueryInterface::RUTA_API . '/' . $result->getId(),
+            ]
+        );
     }
 
     public function putAction(Request $request, int $resultId): Response
