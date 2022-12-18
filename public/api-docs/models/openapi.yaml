@@ -1,7 +1,7 @@
 openapi: 3.0.2
 info:
   title: '🏛️ MiW REST api'
-  description: '[UPM] MiW REST api'
+  description: '[UPM] MiW REST api - blanca'
   license:
     name: MIT
     url: https://opensource.org/licenses/MIT
@@ -291,6 +291,36 @@ components:
               href: /api/v1/users
             self:
               href: /api/v1/users/1508
+    Result:
+      type: object
+      properties:
+        id:
+          description: 'Result Id'
+          type: integer
+          format: int64
+        result:
+          description: 'result value'
+          type: integer
+          format: int64
+        _links:
+          description: link relations
+          type: object
+          properties:
+            parent:
+              type: object
+              properties: { "href": { "type": "string", "format": "url" } }
+            self:
+              type: object
+              properties: { "href": { "type": "string", "format": "url" } }
+      example:
+        result:
+          id: 1509
+          result: 18
+          _links:
+            parent:
+              href: /api/v1/results
+            self:
+              href: /api/v1/results/1509
     Message:
       type: object
       description: HTTP response message
@@ -305,7 +335,6 @@ components:
       example:
         code: 200
         message: Ok
-
   responses:
     400_BadRequest_Response:
       description: "`BAD REQUEST`: e-mail already exists"
