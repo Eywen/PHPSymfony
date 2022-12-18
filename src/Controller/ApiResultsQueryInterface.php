@@ -7,12 +7,12 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Interface ApiResultQueryInterface
+ * Interface ApiResulstQueryInterface
  *
  * @package App\Controller
  *
  */
-interface ApiResulstQueryInterface
+interface ApiResultsQueryInterface
 {
     public final const RUTA_API = '/api/v1/results';
 
