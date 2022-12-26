@@ -232,7 +232,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  users: { description: 'Results array', type: array, items: { $ref: '#/components/schemas/Result' } }
+                  results: { description: 'Results array', type: array, items: { $ref: '#/components/schemas/Result' } }
           headers:
             ETag:
               $ref: '#/components/headers/ETag'
@@ -299,28 +299,53 @@ components:
           type: integer
           format: int64
         result:
-          description: 'result value'
+          description: 'Result value'
           type: integer
           format: int64
-        _links:
-          description: link relations
+        user:
+          description: 'User'
           type: object
           properties:
-            parent:
+            id:
+              description: 'User Id'
+              type: integer
+              format: int64
+            email:
+              description: 'User email'
+              type: string
+              format: email
+            roles:
+              description: 'User roles'
+              type: string
+              format: json
+            _links:
+              description: link relations
               type: object
-              properties: { "href": { "type": "string", "format": "url" } }
-            self:
-              type: object
-              properties: { "href": { "type": "string", "format": "url" } }
+              properties:
+                parent:
+                  type: object
+                  properties: { "href": { "type": "string", "format": "url" } }
+                self:
+                  type: object
+                  properties: { "href": { "type": "string", "format": "url" } }
+        time:
+          description: 'Result datetime'
+          type: string
+          format: date-time
       example:
         result:
           id: 1509
           result: 18
-          _links:
-            parent:
-              href: /api/v1/results
-            self:
-              href: /api/v1/results/1509
+          user:
+            id: 1508
+            email: 'miw.etsisi@upm.es'
+            roles: [ 'ROLE_USER' ]
+            _links:
+              parent:
+                href: /api/v1/users
+              self:
+                href: /api/v1/users/1508
+          time: '2022-19-00T20:00:00Z'
     Message:
       type: object
       description: HTTP response message

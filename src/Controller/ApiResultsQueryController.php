@@ -68,7 +68,7 @@ class ApiResultsQueryController extends AbstractController
         // No hay resultados?
         // @codeCoverageIgnoreStart
         if (empty($results)) {
-            return Utils::errorMessage(Response::HTTP_NOT_FOUND, null, $format);    // 404
+            return Utils::errorMessage(Response::HTTP_NOT_FOUND, "empty results", $format);    // 404
         }
         // @codeCoverageIgnoreEnd
 
