@@ -6,6 +6,7 @@ namespace App\Entity;
 use App\Repository\ResultRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
+use DateTime;
 use JMS\Serializer\Annotation as Serializer;
 use Hateoas\Configuration\Annotation as Hateoas;
 
@@ -75,6 +76,7 @@ class Result implements JsonSerializable
      *          onDelete             = "cascade"
      *     )
      * })
+     * @Serializer\SerializedName(Result::RESULT_USER_ATTR)
      */
     private User $user;
 
@@ -110,7 +112,10 @@ class Result implements JsonSerializable
         $this->time = $time;
     }
 
-    public function getId(): ?int
+    /**
+     * @return int
+     */
+    public function getId(): int
     {
         return $this->id;
     }
@@ -161,6 +166,23 @@ class Result implements JsonSerializable
     public function setTime(DateTime $time): void
     {
         $this->time = $time;
+    }
+
+    /**
+     * Implements __toString()
+     *
+     * @return string
+     * @link   http://php.net/manual/en/language.oop5.magic.php#language.oop5.magic.tostring
+     */
+    public function __toString(): string
+    {
+        return sprintf(
+            '%3d - %3d - %22s - %s',
+            $this->id,
+            $this->result,
+            $this->user->getId(),
+            $this->time->format('Y-m-d H:i:s')
+        );
     }
 
     /**

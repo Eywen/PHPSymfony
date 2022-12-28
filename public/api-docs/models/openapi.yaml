@@ -242,6 +242,33 @@ paths:
           $ref: '#/components/responses/403_Forbidden_Response'
         '404':
           $ref: '#/components/responses/404_Resource_Not_Found_Response'
+    post:
+      tags: [ '👥 Results' ]
+      summary: Creates a Result resource.
+      description: 'Creates a new result'
+      operationId: api_results_post
+      security:
+        - MiWApiSecurity: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/ResultRequestBody'
+      responses:
+        '201':
+          description: '`Created`: result created'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+          headers:
+            Location:
+              $ref: '#/components/headers/Location'
+        '400':
+          $ref: '#/components/responses/400_BadRequest_Response'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '422':
+          $ref: '#/components/responses/422_UnprocessableEntity_Response'
 
 components:
   headers:
@@ -469,7 +496,25 @@ components:
                 description: 'User password'
                 type: string
                 format: password
-
+    ResultRequestBody:
+      description: '`Result` data'
+      required: true
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              result:
+                description: 'Result value'
+                type: integer
+                format: int64
+              user:
+                description: 'User Id'
+                type: integer
+                format: int64
+            example:
+              result: 18
+              userId: 1
   parameters:
     userId:
       name: userId

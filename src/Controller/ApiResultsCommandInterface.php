@@ -18,9 +18,9 @@ interface ApiResultsCommandInterface
      * Summary: Removes the Result resource.<br>
      * Notes: Deletes the result identified by &#x60;resultId&#x60;.
      *
-     * @param int $resultId User id
+     * @param int $result User id
      */
-    public function deleteAction(Request $request, int $resultId): Response;
+    //public function deleteAction(Request $request, int $resultId): Response;
 
     /**
      * POST action<br>
@@ -36,7 +36,7 @@ interface ApiResultsCommandInterface
      * Notes: Updates the result identified by &#x60;resultId&#x60;.
      *
      * @param Request $request request
-     * @param int $resultId User id
+     * @param int $result User id
      */
-    public function putAction(Request $request, int $resultId): Response;
+   // public function putAction(Request $request, int $resultId): Response;
 }
