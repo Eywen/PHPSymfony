@@ -270,6 +270,17 @@ paths:
           $ref: '#/components/responses/403_Forbidden_Response'
         '422':
           $ref: '#/components/responses/422_UnprocessableEntity_Response'
+    options:
+      tags: [ '👥 Results' ]
+      summary: Provides the list of HTTP supported methods.
+      description: 'Return a `Allow` header with a comma separated list of HTTP supported methods.'
+      operationId: api_results_coptions
+      responses:
+        '204':
+          description: '`Allow` header &lt;Response body is empty&gt;'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
   '/results/{resultId}':
     parameters:
       - $ref: '#/components/parameters/resultId'
