@@ -20,7 +20,7 @@ interface ApiResultsCommandInterface
      *
      * @param int $result User id
      */
-    //public function deleteAction(Request $request, int $resultId): Response;
+    public function deleteAction(Request $request, int $resultId): Response;
 
     /**
      * POST action<br>
