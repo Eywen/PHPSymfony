@@ -93,7 +93,7 @@ class ApiResultsQueryController extends AbstractController
      * @see ApiResultsQueryInterface
      *
      * @Route(
-     *     path="/{userId}.{_format}",
+     *     path="/{resultId}.{_format}",
      *     defaults={ "_format": null },
      *     requirements={
      *          "userId": "\d+",
@@ -118,7 +118,7 @@ class ApiResultsQueryController extends AbstractController
             ->find($resultId);
         $format = Utils::getFormat($request);
 
-        if (!$result instanceof User) {
+        if (!$result instanceof Result) {
             return Utils::errorMessage(Response::HTTP_NOT_FOUND, null, $format);    // 404
         }
 
@@ -130,7 +130,7 @@ class ApiResultsQueryController extends AbstractController
 
         return Utils::apiResponse(
             Response::HTTP_OK,
-            [ Result::RESULT_ATTR => $result ],
+            null,
             $format,
             [
                 self::HEADER_CACHE_CONTROL => 'private',

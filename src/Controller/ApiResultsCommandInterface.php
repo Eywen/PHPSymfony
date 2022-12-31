@@ -36,7 +36,7 @@ interface ApiResultsCommandInterface
      * Notes: Updates the result identified by &#x60;resultId&#x60;.
      *
      * @param Request $request request
-     * @param int $result User id
+     * @param int $resultId User id
      */
-   // public function putAction(Request $request, int $resultId): Response;
+    public function putAction(Request $request, int $resultId): Response;
 }

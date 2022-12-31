@@ -222,6 +222,7 @@ paths:
       summary: Retrieves the collection of Result resources.
       description: 'Returns all result from the system that the user has access to.'
       operationId: api_results_cget
+
       security:
         - MiWApiSecurity: [ ]
       responses:
@@ -269,6 +270,87 @@ paths:
           $ref: '#/components/responses/403_Forbidden_Response'
         '422':
           $ref: '#/components/responses/422_UnprocessableEntity_Response'
+  '/results/{resultId}':
+    parameters:
+      - $ref: '#/components/parameters/resultId'
+    get:
+      tags: [ '👥 Results' ]
+      summary: Retrieves a Result resource based on a single ID.
+      description: 'Returns the result identified by `resultId`.'
+      operationId: api_results_get
+      security:
+        - MiWApiSecurity: [ ]
+      responses:
+        '200':
+          description: Result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+          headers:
+            ETag:
+              $ref: '#/components/headers/ETag'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+    put:
+      tags: [ '👥 Results' ]
+      summary: Updates the Result resource.
+      description: 'Updates the result identified by `resultId`.'
+      operationId: api_results_put
+      parameters:
+        - $ref: '#/components/parameters/ifMatchParam'
+      security:
+        - MiWApiSecurity: [ ]
+      requestBody:
+        $ref: '#/components/requestBodies/ResultRequestBody'
+      responses:
+        '209':
+          description: '`Content Returned`: result previously existed and is now updated'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Result'
+        '400':
+          $ref: '#/components/responses/400_BadRequest_Response'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+        '412':
+          $ref: '#/components/responses/412_Precondition_Failed_Response'
+    delete:
+      tags: [ '👥 Results' ]
+      summary: Removes the Result resource.
+      description: 'Deletes the result identified by `resultId`.'
+      operationId: api_results_delete
+      security:
+        - MiWApiSecurity: [ ]
+      responses:
+        '204':
+          description: 'Result deleted &lt;Response body is empty&gt;'
+        '401':
+          $ref: '#/components/responses/401_Unauthorized_Response'
+        '403':
+          $ref: '#/components/responses/403_Forbidden_Response'
+        '404':
+          $ref: '#/components/responses/404_Resource_Not_Found_Response'
+    options:
+      tags: [ '👥 Results' ]
+      summary: Provides the list of HTTP supported methods.
+      description: 'Return a `Allow` header with a comma separated list of HTTP supported methods.'
+      operationId: api_results_options_id
+      responses:
+        '204':
+          description: '`Allow` header &lt;Response body is empty&gt;'
+          headers:
+            Allow:
+              $ref: '#/components/headers/Allow'
 
 components:
   headers:
@@ -523,6 +605,20 @@ components:
       required: true
       schema: { "type": "integer", pattern: '^\d+$' }
     ifMatchParam:
+      name: If-Match
+      in: header
+      description: "ETag value of the resource you are trying to update"
+      required: true
+      schema:
+        type: string
+        pattern: "[0-9a-f]*"
+    resultId:
+      name: resultId
+      in: path
+      description: 'ID of result'
+      required: true
+      schema: { "type": "integer", pattern: '^\d+$' }
+    ifMatchParamResult:
       name: If-Match
       in: header
       description: "ETag value of the resource you are trying to update"

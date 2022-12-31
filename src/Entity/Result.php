@@ -43,6 +43,7 @@ class Result implements JsonSerializable
     public const RESULT_ID_ATTR = 'resultId';
     public const RESULT_USER_ATTR = 'user';
     public const TIME_ATTR = 'time';
+    public const ATTR_RESULT = 'resultado';
 
     /**
      * @ORM\Id()
