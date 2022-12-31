@@ -130,7 +130,7 @@ class ApiResultsQueryController extends AbstractController
 
         return Utils::apiResponse(
             Response::HTTP_OK,
-            null,
+            [ Result::ATTR_RESULT => $result ],
             $format,
             [
                 self::HEADER_CACHE_CONTROL => 'private',

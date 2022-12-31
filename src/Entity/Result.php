@@ -21,7 +21,7 @@ use Hateoas\Configuration\Annotation as Hateoas;
  *
  * @Hateoas\Relation(
  *     name="parent",
- *     href="expr(constant('\\App\\Controller\\ApiResultsController::RUTA_API'))"
+ *     href="expr(constant('\\App\\Controller\\ApiResultsQueryController::RUTA_API'))"
  * )
  *
  * @Hateoas\Relation(
