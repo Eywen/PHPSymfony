@@ -47,6 +47,7 @@
         "jetbrains/phpstorm-attributes": "^1.0",
         "phpmetrics/phpmetrics": "^2.8",
         "phpstan/phpstan": "^1.9",
+        "phpunit/phpunit": "^9.5",
         "rector/rector": "^0.14",
         "symfony/browser-kit": "*",
         "symfony/css-selector": "*",

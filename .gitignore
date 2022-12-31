@@ -28,3 +28,8 @@
 ###< lexik/jwt-authentication-bundle ###
 
 /.php-cs-fixer.cache
+
+###> phpunit/phpunit ###
+/phpunit.xml
+.phpunit.result.cache
+###< phpunit/phpunit ###
