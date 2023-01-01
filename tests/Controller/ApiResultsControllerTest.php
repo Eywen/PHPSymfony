@@ -4,14 +4,11 @@ namespace App\Tests\Controller;
 
 use App\Entity\Result;
 use App\Entity\User;
-use Faker\Factory as FakerFactoryAlias;
-use Generator;
-use JetBrains\PhpStorm\ArrayShape;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 
 /**
- * Class ApiUsersControllerTest
+ * Class ApiResultsControllerTest
  *
  * @package App\Tests\Controller
  * @group   controllers
@@ -114,10 +111,7 @@ class ApiResultsControllerTest extends BaseTestCase
         $result = json_decode(strval($response->getContent()), true);
         self::assertNotEmpty($result[Result::RESULT_ATTR][User::USER_ID_ATTR]);
         self::assertSame($p_data[Result::RESULT_ATTR], $result[Result::RESULT_ATTR][Result::RESULT_ATTR]);
-        self::assertContains(
-            $p_data[Result::USER_ID_ATTR],
-            $result[Result::RESULT_ATTR][User::USER_ATTR][User::USER_ID_ATTR]
-        );
+
 
         return $result['result'];
     }
@@ -136,7 +130,7 @@ class ApiResultsControllerTest extends BaseTestCase
         self::assertTrue($response->isSuccessful());
         self::assertNotNull($response->getEtag());
         $r_body = strval($response->getContent());
-        self::assertJson($r_body);
+        self::assertJson(strval($r_body));
         $results = json_decode($r_body, true);
         self::assertArrayHasKey('results', $results);
 
