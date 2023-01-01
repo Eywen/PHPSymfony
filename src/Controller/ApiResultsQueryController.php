@@ -20,13 +20,13 @@ use function in_array;
  * @package App\Controller
  *
  * @Route(
- *     path=ApiResultsQueryInterface::RUTA_API,
+ *     path=ApiResultsQueryController::RUTA_API,
  *     name="api_results_"
  * )
  */
 class ApiResultsQueryController extends AbstractController
 {
-
+    public final const RUTA_API = '/api/v1/results';
     private const HEADER_CACHE_CONTROL = 'Cache-Control';
     private const HEADER_ETAG = 'ETag';
     private const HEADER_ALLOW = 'Allow';
